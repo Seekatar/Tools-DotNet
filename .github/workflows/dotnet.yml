@@ -41,8 +41,19 @@ jobs:
         } else {
             $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
         }
-        "Version=$newVersion"
+        "Version=$newVersion written to $env:GITHUB_ENV"
         echo "Version=$newVersion" >> $env:GITHUB_ENV
+        "::group::GitHub_env1"
+        $env:GITHUB_ENV
+        gc $env:GITHUB_ENV -raw
+        "::endgroup::"
+
+        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append
+
+        "::group::GitHub_env2"
+        $env:GITHUB_ENV
+        gc $env:GITHUB_ENV -raw
+        "::endgroup::"
 
     - name: Dump Environment
       run: |
