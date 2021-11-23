@@ -2,9 +2,11 @@
 
 This repo contains various .NET tools for .NET 6
 
-[![.NET](https://github.com/Seekatar/WebApi-DotNet-6/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Seekatar/WebApi-DotNet-6/actions/workflows/dotnet.yml)
+## [ObjectFactory](src/Tools/ObjectFactory/README.md)
+ObjectFactory discovers derived `Types` and allows them to be created later.
 
-[ObjectFactory](src/Tools/ObjectFactory/README.md) discovers derived `Types` and allows them to be created later.
+[![.NET](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml)
+[![codecov](https://codecov.io/gh/Seekatar/Tools-DotNet/branch/main/graph/badge.svg?token=X3J5MU9T3C)](https://codecov.io/gh/Seekatar/Tools-DotNet)
 
 ## Pulling From GitHub NuGet Repo
 
