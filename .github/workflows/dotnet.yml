@@ -37,11 +37,24 @@ jobs:
       id: step_one
       shell: bash
       run: |
+        echo $GITHUB_ENV
         echo "action_state=yellow" >> $GITHUB_ENV
     - name: Use the value
       shell: bash
       id: step_two
       run: |
+        echo $GITHUB_ENV
+        echo "${{ env.action_state }}" # This will output 'yellow'
+
+    - name: Set the value2
+      id: step_one
+      run: |
+        echo $env:GITHUB_ENV
+        echo "action_state=yellow" >> $env:GITHUB_ENV
+    - name: Use the value2
+      id: step_two
+      run: |
+        echo $env:GITHUB_ENV
         echo "${{ env.action_state }}" # This will output 'yellow'
 
     - name: Determine Version
