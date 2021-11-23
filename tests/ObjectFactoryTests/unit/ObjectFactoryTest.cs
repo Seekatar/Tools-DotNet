@@ -62,6 +62,11 @@ public class ObjectFactoryTests
         worker.RunWorker(5, 6).ShouldBe(30);
     }
     [Test]
+    public void TestLoadedCount()
+    {
+        _factory!.LoadedTypes.Count.ShouldBe(4);
+    }
+    [Test]
     public void TestMissing()
     {
         var worker = _factory!.GetInstance("NotFound");

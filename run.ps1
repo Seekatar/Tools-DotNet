@@ -1,7 +1,8 @@
 param (
-    [ValidateSet('ObjectFactoryBuild','ObjectFactoryTest','ci')]
+    [ValidateSet('ObjectFactoryBuild','ObjectFactoryPack','ObjectFactoryTest','ci','CreateLocalNuget')]
     [string[]] $Tasks,
-    [string] $Version
+    [string] $Version,
+    [string] $LocalNugetFolder
 )
 
 function executeSB
@@ -31,7 +32,7 @@ param(
 }
 
 if ($Tasks -eq "ci") {
-    $myTasks = @('CreateLocalNuget','ObjectFactoryBuild','ObjectFactoryTest')
+    $myTasks = @('CreateLocalNuget','ObjectFactoryBuild','ObjectFactoryTest','ObjectFactoryPack')
 } else {
     $myTasks = $Tasks
 }
@@ -43,13 +44,20 @@ foreach ($t in $myTasks) {
         $prevPref = $ErrorActionPreference
         $ErrorActionPreference = "Stop"
 
+        "-------------------------------"
+        "Starting $t"
+        "-------------------------------"
+
         switch ($t) {
             'CreateLocalNuget' {
                 executeSB -WorkingDirectory $PSScriptRoot {
                     $localNuget = dotnet nuget list source | Select-String "Local \[Enabled" -Context 0,1
                     if (!$localNuget) {
-                        New-Item 'packages' -ItemType Directory -ErrorAction Ignore
-                        dotnet nuget sources add -name Local -source (Join-Path $PSScriptRoot 'packages')
+                        if (!$LocalNugetFolder) {
+                            $LocalNugetFolder = (Join-Path $PSScriptRoot 'packages')
+                            $null = New-Item 'packages' -ItemType Directory -ErrorAction Ignore
+                        }
+                        dotnet nuget add source $LocalNugetFolder --name Local
                     }
                     }
             }
@@ -71,10 +79,19 @@ foreach ($t in $myTasks) {
                     }
                     }
                 executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/unit') {
-                    dotnet test
+                    dotnet test --collect:"XPlat Code Coverage"
                     }
             }
-            Default {}
+            'ObjectFactoryPack' {
+                if ($Version) {
+                    "Packing with version $Version"
+                    executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {
+                        dotnet pack -o ../../packages --include-source -p:Version=$Version -p:AssemblyVersion=$Version
+                    }
+                } else {
+                    throw "Must supply Version for pack"
+                }
+            }
         }
 
     } finally {
