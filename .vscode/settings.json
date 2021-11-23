@@ -21,5 +21,8 @@
         "titleBar.inactiveBackground": "#89672499",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#896724"
+    "peacock.color": "#896724",
+    "cSpell.words": [
+        "endgroup"
+    ]
 }
