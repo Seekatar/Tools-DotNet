@@ -97,10 +97,6 @@ jobs:
        gc $env:GITHUB_ENV -raw
        "::endgroup::"
 
-       "::group::env"
-       ${{ env }}
-       "::endgroup::"
-
        "::group::env.version"
        ${{ env.Version }}
        "::endgroup::"
