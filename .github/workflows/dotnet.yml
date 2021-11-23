@@ -107,7 +107,7 @@ jobs:
 
     - name: Do CI Build and Test
       run: |
-        ./run.ps1 ci -Version $Version
+        ./run.ps1 ci -Version $env:Version
       env:
        Version: ${{ env.Version }}
 
@@ -122,7 +122,7 @@ jobs:
     - name: Publish to GitHub NuGet
       if: startsWith(github.ref, 'refs/heads/releases/') && matrix.os == 'ubuntu-latest'
       run: |
-       "Publishing ./packages/Seekatar.Tools.$Version.nupkg"
-       dotnet nuget push "./packages/Seekatar.Tools.$Version.nupkg" --api-key ${{ secrets.NUGET_PAT }} --source "github"
+       "Publishing ./packages/Seekatar.Tools.$env:Version.nupkg"
+       dotnet nuget push "./packages/Seekatar.Tools.$env:Version.nupkg" --api-key ${{ secrets.NUGET_PAT }} --source "github"
       env:
        Version: ${{ env.Version }}
