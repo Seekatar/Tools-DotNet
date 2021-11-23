@@ -33,6 +33,17 @@ jobs:
       run: |
        dotnet nuget add source --username $env:GITHUB_REPOSITORY_OWNER --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/$($env:GITHUB_REPOSITORY_OWNER.ToLower())/index.json"
 
+    - name: Set the value
+      id: step_one
+      shell: bash
+      run: |
+        echo "action_state=yellow" >> $GITHUB_ENV
+    - name: Use the value
+      shell: bash
+      id: step_two
+      run: |
+        echo "${{ env.action_state }}" # This will output 'yellow'
+
     - name: Determine Version
       run: |
         if ('${{ github.ref }}' -match ".*/v{0,1}(?<ver>\d\.\d\.\d)(?:-(?<prerelease>[0-9a-z]+)(?<rest>.*))?" `
