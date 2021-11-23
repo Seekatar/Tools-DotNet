@@ -79,7 +79,7 @@ foreach ($t in $myTasks) {
                     }
                     }
                 executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/unit') {
-                    dotnet test
+                    dotnet test --collect:"XPlat Code Coverage"
                     }
             }
             'ObjectFactoryPack' {
