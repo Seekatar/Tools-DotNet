@@ -42,6 +42,7 @@ jobs:
             $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
         }
         "Version=$newVersion"
+        $env:Version = $newVersion
         echo "Version=$newVersion" >> $GITHUB_ENV
 
     - name: Dump Environment
