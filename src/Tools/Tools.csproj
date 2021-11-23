@@ -11,9 +11,9 @@
     <Version>1.0.0</Version>
     <Authors>Seekatar.</Authors>
     <Company>Seekatar</Company>
-    <RepositoryUrl>https://github.com/seekatar/WebApi-DotNet-6</RepositoryUrl>
+    <RepositoryUrl>https://github.com/seekatar/Tools-DotNet</RepositoryUrl>
     <Description>
-    This library contains various .NET tools
+    This library contains various .NET tools, such as ObjectFactory.
     </Description>
   </PropertyGroup>
 
