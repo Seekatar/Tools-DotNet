@@ -9,11 +9,12 @@ namespace Seekatar.Tools;
 /// <summary>
 /// Factory for discovering types from assemblies then creating them on demand
 /// </summary>
+/// <remarks>Derived from this to override Predicate or ObjectName</remarks>
 /// <typeparam name="T">type of object to serve up</typeparam>
 public class ObjectFactory<T> : IObjectFactory<T> where T : class
 {
     private readonly IServiceProvider _provider;
-    private readonly Dictionary<string, Type> _objectTypes;
+    private readonly Dictionary<string, Type> _types;
 
     public ObjectFactory(IServiceProvider provider, IOptions<ObjectFactoryOptions> options)
     {
@@ -22,13 +23,13 @@ public class ObjectFactory<T> : IObjectFactory<T> where T : class
         {
             LoadAssemblies(options.Value.AssemblyNameMask);
         }
-        _objectTypes = LoadTypes(options?.Value?.AssemblyNameRegEx);
+        _types = LoadTypes(options?.Value?.AssemblyNameRegEx);
     }
 
     private static IList<Assembly> LoadAssemblies(string searchPattern)
     {
         var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException("Couldn't get executing assembly's folder");
-        
+
         if (!searchPattern.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
             searchPattern += ".dll";
@@ -41,7 +42,7 @@ public class ObjectFactory<T> : IObjectFactory<T> where T : class
     /// <summary>
     /// Get a list of the loaded types.
     /// </summary>
-    public IReadOnlyDictionary<string, Type> ObjectTypes => _objectTypes;
+    public IReadOnlyDictionary<string, Type> LoadedTypes => _types;
 
     /// <summary>
     /// Criteria for the classes to load. Defaults to classes that implements T
@@ -77,9 +78,9 @@ public class ObjectFactory<T> : IObjectFactory<T> where T : class
     /// <returns>The instance or null</returns>
     public T? GetInstance(string name)
     {
-        if (!string.IsNullOrEmpty(name) && _objectTypes.ContainsKey(name))
+        if (!string.IsNullOrEmpty(name) && _types.ContainsKey(name))
         {
-            var type = _objectTypes[name];
+            var type = _types[name];
             return _provider.GetService(type) as T ?? ActivatorUtilities.GetServiceOrCreateInstance(_provider, type) as T;
         }
         return null;

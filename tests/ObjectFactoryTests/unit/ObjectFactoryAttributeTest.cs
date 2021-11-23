@@ -66,4 +66,9 @@ public class ObjectFactoryAttributeTest
         worker.ShouldNotBeNull();
         worker.RunWorker(5, 6).ShouldBe(30);
     }
+    [Test]
+    public void TestLoadedCount()
+    {
+        _factory!.LoadedTypes.Count.ShouldBe(2);
+    }
 }
