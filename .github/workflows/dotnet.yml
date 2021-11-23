@@ -47,12 +47,12 @@ jobs:
         echo "${{ env.action_state }}" # This will output 'yellow'
 
     - name: Set the value2
-      id: step_one
+      id: step_onea
       run: |
         echo $env:GITHUB_ENV
         echo "action_state=yellow" >> $env:GITHUB_ENV
     - name: Use the value2
-      id: step_two
+      id: step_twoa
       run: |
         echo $env:GITHUB_ENV
         echo "${{ env.action_state }}" # This will output 'yellow'
