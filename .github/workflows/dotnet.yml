@@ -42,7 +42,7 @@ jobs:
             $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
         }
         "Version=$newVersion"
-        "Version=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "Version=$newVersion" >> $GITHUB_ENV
 
     - name: Dump Environment
       run: |
@@ -55,7 +55,8 @@ jobs:
        "::endgroup::"
 
        "::group::GitHub_env"
-       gc $env:GITHUB_ENV
+       $env:GITHUB_ENV
+       gc $env:GITHUB_ENV -raw
        "::endgroup::"
 
        "::group::env.version"
