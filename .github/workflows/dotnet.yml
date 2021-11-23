@@ -44,18 +44,21 @@ jobs:
       id: step_two
       run: |
         echo $GITHUB_ENV
-        echo "${{ env.action_state }}" # This will output 'yellow'
+        echo "${{ env.action_state }} is yellow"
 
     - name: Set the value2
       id: step_onea
       run: |
         echo $env:GITHUB_ENV
-        echo "action_state=yellow" >> $env:GITHUB_ENV
+        echo "action_state2=green" >> $env:GITHUB_ENV
     - name: Use the value2
       id: step_twoa
       run: |
         echo $env:GITHUB_ENV
-        echo "${{ env.action_state }}" # This will output 'yellow'
+        "env"
+        echo ${{ env }}
+        "state2"
+        echo "${{ env.action_state2 }} is green"
 
     - name: Determine Version
       run: |
@@ -92,6 +95,10 @@ jobs:
        "::group::GitHub_env"
        $env:GITHUB_ENV
        gc $env:GITHUB_ENV -raw
+       "::endgroup::"
+
+       "::group::env"
+       ${{ env }}
        "::endgroup::"
 
        "::group::env.version"
