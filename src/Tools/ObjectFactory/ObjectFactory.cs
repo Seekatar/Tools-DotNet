@@ -85,4 +85,19 @@ public class ObjectFactory<T> : IObjectFactory<T> where T : class
         }
         return null;
     }
+
+    /// <summary>
+    /// Get the instance of an object type that this factory loaded by Type
+    /// </summary>
+    /// <param name="type">type that has been registered</param>
+    /// <returns>The instance or null</returns>
+    public T? GetInstance(Type type)
+    {
+        var foundType = _types.Values.FirstOrDefault(o => o == type);
+        if (foundType != null)
+        {
+            return _provider.GetService(foundType) as T ?? ActivatorUtilities.GetServiceOrCreateInstance(_provider, type) as T;
+        }
+        return null;
+    }
 }
