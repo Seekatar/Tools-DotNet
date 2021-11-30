@@ -17,9 +17,30 @@ class ObjectAttributeFactory<T> : ObjectFactory<T>  where T : class
     public ObjectAttributeFactory(IServiceProvider provider, IOptions<ObjectFactoryOptions> options) : base(provider, options)
     { }
 
+    //protected override bool Predicate(Type type) => IsSubclassOfRawGeneric(typeof(TestActivityBase<,>),type) && type.GetCustomAttributes(typeof(WorkerAttribute), false).Any();
     protected override bool Predicate(Type type) => base.Predicate(type) && type.GetCustomAttributes(typeof(WorkerAttribute), false).Any();
 
     protected override string ObjectName(Type type) => (type.GetCustomAttributes(typeof(WorkerAttribute), false).FirstOrDefault() as WorkerAttribute)!.Name;
+
+    // modified from this link to add if check to only do concrete classes and not itself
+    // https://stackoverflow.com/questions/457676/check-if-a-class-is-derived-from-a-generic-class
+    static bool IsSubclassOfRawGeneric(Type generic, Type? toCheck)
+    {
+        if (toCheck != null && generic != toCheck && !toCheck.IsInterface && !toCheck.IsAbstract)
+        {
+            while (toCheck != null && toCheck != typeof(object))
+            {
+                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+                if (generic == cur)
+                {
+                    return true;
+                }
+                toCheck = toCheck.BaseType;
+            }
+        }
+        return false;
+    }
+
 }
 
 
@@ -33,7 +54,7 @@ public class ObjectFactoryGenericTest
     {
         IServiceCollection serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddSingleton<IObjectFactory<ITestActivity>, ObjectFactory<ITestActivity>>();
+        serviceCollection.AddSingleton<IObjectFactory<ITestActivity>, ObjectAttributeFactory<ITestActivity>>();
 
         serviceCollection.AddOptions<ObjectFactoryOptions>().Configure(options => {
             options.AssemblyNameMask = "O*";
