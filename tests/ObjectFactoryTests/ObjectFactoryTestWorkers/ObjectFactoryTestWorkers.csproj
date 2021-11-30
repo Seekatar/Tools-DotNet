@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ObjectFactoryTestInterface\ObjectFactoryTestInterface.csproj" />
+    <ProjectReference Include="..\..\..\src\Tools\Tools.csproj" />
   </ItemGroup>
 
 </Project>

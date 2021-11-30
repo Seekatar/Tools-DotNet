@@ -9,7 +9,17 @@ using System.Linq;
 
 namespace Seekatar.Tests;
 
-public class ObjectFactoryAttributeTest
+class WorkerAttributeFactory : ObjectFactory<ITestWorker>
+{
+    public WorkerAttributeFactory(IServiceProvider provider, IOptions<ObjectFactoryOptions> options) : base(provider, options)
+    { }
+
+    protected override bool Predicate(Type type) => base.Predicate(type) && type.GetCustomAttributes(typeof(WorkerAttribute), false).Any();
+
+    protected override string ObjectName(Type type) => (type.GetCustomAttributes(typeof(WorkerAttribute), false).FirstOrDefault() as WorkerAttribute)!.Name;
+}
+
+public class ObjectFactoryCustomAttributeTest
 {
     private ServiceProvider? _provider;
     private IObjectFactory<ITestWorker>? _factory;
@@ -19,7 +29,7 @@ public class ObjectFactoryAttributeTest
     {
         IServiceCollection serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddSingleton<IObjectFactory<ITestWorker>, ObjectFactoryUsingNameAttribute<ITestWorker>>();
+        serviceCollection.AddSingleton<IObjectFactory<ITestWorker>, WorkerAttributeFactory>();
         serviceCollection.AddSingleton<ITestWorker, TestSummer>();
 
         serviceCollection.AddOptions<ObjectFactoryOptions>().Configure(options =>
@@ -36,29 +46,22 @@ public class ObjectFactoryAttributeTest
     }
 
     [Test]
-    public void TestSubtract()
-    {
-        var worker = _factory!.GetInstance("subtract");
-        worker.ShouldNotBeNull();
-        worker.RunWorker(5, 4).ShouldBe(1);
-    }
-    [Test]
-    public void TestSubtractByType()
-    {
-        var worker = _factory!.GetInstance(typeof(TestSubtracter));
-        worker.ShouldNotBeNull();
-        worker.RunWorker(5, 4).ShouldBe(1);
-    }
-    [Test]
     public void TestAdd()
     {
         var worker = _factory!.GetInstance("add");
+        worker.ShouldNotBeNull();
+        worker.RunWorker(1, 4).ShouldBe(5);
+    }
+    [Test]
+    public void TestSubtract()
+    {
+        var worker = _factory!.GetInstance(typeof(TestSubtracter).Name);
         worker.ShouldBeNull();
     }
     [Test]
     public void TestMultiplierFromNuGet()
     {
-        // TestMultiplier not reference here to avoid it getting loaded automatically
+        // TestMultiplier not reference here to avoid it gettting loaded automatically
         // that way this tests the ObjectFactory.LoadAssemblies method
         var worker = _factory!.GetInstance("times");
         worker.ShouldNotBeNull();

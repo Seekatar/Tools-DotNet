@@ -3,11 +3,6 @@
 public class ObjectFactoryOptions
 {
     /// <summary>
-    /// Set to have default implementation use ObjectNameAttribute for the name
-    /// </summary>
-    public bool UseObjectNameAttribute { get; set; }
-
-    /// <summary>
     /// Wild card mask of assemblies to load, that wouldn't automatically load
     /// </summary>
     /// <remarks>If empty, doesn't load anything extra</remarks>
