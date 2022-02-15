@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Seekatar.Tools;
 
 namespace Seekatar.Tests;
 
@@ -8,6 +9,7 @@ class TestAdder : ITestWorker
     public int RunWorker(int a, int b) => a + b;
 }
 
+[ObjectName(Name="subtract")]
 class TestSubtracter : ITestWorker
 {
     public int RunWorker(int a, int b) => a - b;

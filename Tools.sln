@@ -5,11 +5,15 @@ VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "src\Tools\Tools.csproj", "{66A324DC-C424-462F-8E69-2B5945232D3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools-Test", "tests\ObjectFactoryTests\unit\Tools-Test.csproj", "{A99F82D1-6134-45AE-BC8A-4D0140ECD655}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools-Test", "tests\unit\Tools-Test.csproj", "{A99F82D1-6134-45AE-BC8A-4D0140ECD655}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectFactoryTestWorkers", "tests\ObjectFactoryTests\ObjectFactoryTestWorkers\ObjectFactoryTestWorkers.csproj", "{0F2834E0-141E-4316-8F9F-FD807C66E47F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectFactoryTestInterface", "tests\ObjectFactoryTests\ObjectFactoryTestInterface\ObjectFactoryTestInterface.csproj", "{4D9D2940-1A17-47D3-A7F2-EF52958DE0DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettingsApi", "tests\WebSettingsApi\WebSettingsApi.csproj", "{B36EAE08-74CB-47D1-A488-2A890F79AAFC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettings5Api", "tests\WebSettings5Api\WebSettings5Api.csproj", "{9F400274-EDC9-459E-ABF0-0933E1C78959}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{4D9D2940-1A17-47D3-A7F2-EF52958DE0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D9D2940-1A17-47D3-A7F2-EF52958DE0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D9D2940-1A17-47D3-A7F2-EF52958DE0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B36EAE08-74CB-47D1-A488-2A890F79AAFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B36EAE08-74CB-47D1-A488-2A890F79AAFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B36EAE08-74CB-47D1-A488-2A890F79AAFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B36EAE08-74CB-47D1-A488-2A890F79AAFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F400274-EDC9-459E-ABF0-0933E1C78959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F400274-EDC9-459E-ABF0-0933E1C78959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F400274-EDC9-459E-ABF0-0933E1C78959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F400274-EDC9-459E-ABF0-0933E1C78959}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

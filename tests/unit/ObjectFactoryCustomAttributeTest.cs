@@ -19,7 +19,7 @@ class WorkerAttributeFactory : ObjectFactory<ITestWorker>
     protected override string ObjectName(Type type) => (type.GetCustomAttributes(typeof(WorkerAttribute), false).FirstOrDefault() as WorkerAttribute)!.Name;
 }
 
-public class ObjectFactoryAttributeTest
+public class ObjectFactoryCustomAttributeTest
 {
     private ServiceProvider? _provider;
     private IObjectFactory<ITestWorker>? _factory;
