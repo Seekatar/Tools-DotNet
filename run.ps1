@@ -27,7 +27,8 @@ function executeSB
 param(
     [Parameter(Mandatory)]
     [scriptblock] $ScriptBlock,
-    [string] $WorkingDirectory
+    [string] $WorkingDirectory,
+    [string] $Name
 )
     Set-StrictMode -Version Latest
 
@@ -38,7 +39,7 @@ param(
         Invoke-Command -ScriptBlock $ScriptBlock
 
         if ($LASTEXITCODE -ne 0) {
-            throw "Error executing command, last exit $LASTEXITCODE"
+            throw "Error executing command '$Name', last exit $LASTEXITCODE"
         }
     } finally {
         if ($WorkingDirectory) {
@@ -66,7 +67,7 @@ foreach ($t in $myTasks) {
 
         switch ($t) {
             'CreateLocalNuget' {
-                executeSB -WorkingDirectory $PSScriptRoot {
+                executeSB -WorkingDirectory $PSScriptRoot -Name 'CreateNuget' {
                     $localNuget = dotnet nuget list source | Select-String "Local \[Enabled" -Context 0,1
                     if (!$localNuget) {
                         if (!$LocalNugetFolder) {
@@ -78,31 +79,31 @@ foreach ($t in $myTasks) {
                     }
             }
             'Build' {
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') -Name 'Build' {
                     dotnet build
                     }
             }
             'Test' {
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/ObjectFactoryTestWorkers') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/ObjectFactoryTestWorkers') -Name 'Build test worker' {
                     $localNuget = dotnet nuget list source | Select-String "Local \[Enabled" -Context 0,1
                     if ($localNuget) {
-                        dotnet pack -o ../../../packages --include-source -p:Version=1.0.2 -p:AssemblyVersion=1.0.2
-                        dotnet nuget push "../../../packages/ObjectFactoryTestWorkers.1.0.2.nupkg" -s Local
+                        # pack directly to local nuget folder since on build box, can't push to local
+                        dotnet pack -o ($localNuget.Context.PostContext.Trim()) --include-source -p:Version=1.0.2 -p:AssemblyVersion=1.0.2
                     } else {
                         throw "Must have a Local NuGet source for testing. e.g. dotnet nuget sources add -name Local -source c:\nupkgs"
                     }
                     }
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') -Name 'Build test' {
                     dotnet build
                     }
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') -Name 'Run test' {
                     dotnet test --collect:"XPlat Code Coverage"
                     }
             }
             'Pack' {
                 if ($Version) {
                     "Packing with version $Version"
-                    executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {
+                    executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') -Name 'Pack' {
                         dotnet pack -o ../../packages --include-source -p:Version=$Version -p:AssemblyVersion=$Version
                     }
                 } else {
