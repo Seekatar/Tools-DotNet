@@ -48,7 +48,7 @@ param(
 }
 
 if ($Tasks -eq "ci") {
-    $myTasks = @('CreateLocalNuget','ObjectFactoryBuild','ObjectFactoryTest','ObjectFactoryPack')
+    $myTasks = @('CreateLocalNuget','Build','Test','Pack')
 } else {
     $myTasks = $Tasks
 }
