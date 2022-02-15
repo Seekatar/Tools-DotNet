@@ -20,12 +20,12 @@ public class SharedDevSettingsConsoleTest
     {
     }
 
-    static IConfiguration SetupConsole(string? filename = null, string expectedName = "DEV", bool optional = true, bool reloadOnChange = false)
+    static IConfiguration SetupConsole(string? filename = null, string expectedName = "DEV", bool reloadOnChange = false)
     {
         Environment.SetEnvironmentVariable("InEnvironment", "ENV");
 
         var configuration = new ConfigurationBuilder()
-                       .AddSharedDevSettings(optional, reloadOnChange, filename)
+                       .AddSharedDevSettings(reloadOnChange, filename)
                        .AddJsonFile("appsettings.json", true, true)
                        .AddEnvironmentVariables()
                        .Build();

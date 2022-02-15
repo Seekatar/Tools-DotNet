@@ -4,7 +4,7 @@ This tool will create objects by a name of a given `Type`. Registered as a singl
 
 This uses the .NET [IServiceProvider](https://docs.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-6.0) to create the instances so they support injecting whatever they need.
 
-> If you can use dependency injection to get your objects, or an IEnumerable&lt;baseClass&gt; that is preferred to a factory. Since this is a Service Resolver (anti)-pattern
+> If you can use dependency injection to get your objects or an `IEnumerable&lt;baseClass&gt;` that is preferred to a factory. Since this is a Service Resolver (anti)-pattern. ([Or is it?](https://jimmybogard.com/service-locator-is-not-an-anti-pattern/))
 
 ## Default Configuration
 
@@ -41,7 +41,7 @@ public class TestMultiplier : ITestWorker
 
 ## Loading Assemblies
 
-If you have a nuget package that has implementations in it, it may loaded at startup if nothing references it. The factory can optionally load them so it can register them. For instance if the assembly names matched `ObjectFactory*` you would do this. (The unit test `ObjectFactoryTestWorkers` project demonstrates this.)
+If you have a NuGet package that has implementations in it, it may be loaded at startup if nothing references it. The factory can optionally load them so it can register them. For instance, if the assembly names matched `ObjectFactory*` you would do this. (The unit test `ObjectFactoryTestWorkers` project demonstrates this.)
 
 ```csharp
 serviceCollection.AddOptions<ObjectFactoryOptions>().Configure(options => {
@@ -56,7 +56,7 @@ The `AssemblyNameMask` is a file mask for loading assemblies from the `bin` fold
 
 ## Customizing Filtering and Lookup Name
 
-As mentioned above, the default configuration checks for derived types of the generic parameter and uses the `Type` or `Type.Name` when looking up the `Type` to create. If you have special code for selecting the `Type`s or the names for lookups, you can derive from `ObjectFactory`. In the unit test example below, I override the `Predicate` to only include implementations that have a `WorkerAttribute`. Then I override `ObjectName` to use the `Name` of the attribute as the lookup value (See `WorkerAttributeFactory` in unit tests.)
+As mentioned above, the default configuration checks for derived types of the generic parameter and uses the `Type` or `Type.Name` when looking up the `Type` to create. If you have a special code for selecting the `Type`s or the names for lookups, you can derive from `ObjectFactory`. In the unit test example below, I override the `Predicate` to only include implementations that have a `WorkerAttribute`. Then I override `ObjectName` to use the `Name` of the attribute as the lookup value (See `WorkerAttributeFactory` in unit tests.)
 
 ```csharp
 // only include ones that have WorkerAttribute

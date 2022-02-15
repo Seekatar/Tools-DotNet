@@ -1,7 +1,12 @@
-﻿namespace Seekatar.Tools;
+﻿using System;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class ObjectNameAttribute : Attribute
+namespace Seekatar.Tools
 {
-    public string Name { get; set; } = "";
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class ObjectNameAttribute : Attribute
+    {
+        public string Name { get; set; } = "";
+    }
+
 }

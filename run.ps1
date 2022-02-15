@@ -1,5 +1,21 @@
 param (
-    [ValidateSet('ObjectFactoryBuild','ObjectFactoryPack','ObjectFactoryTest','ci','CreateLocalNuget')]
+    [ArgumentCompleter({
+        param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+        $runFile = (Join-Path (Split-Path $commandAst -Parent) run.ps1)
+        if (Test-Path $runFile) {
+            Get-Content $runFile |
+                    Where-Object { $_ -match "^\s+'([\w+-]+)' {" } |
+                    ForEach-Object {
+                        if ( !($fakeBoundParameters[$parameterName]) -or
+                            (($matches[1] -notin $fakeBoundParameters.$parameterName) -and
+                             ($matches[1] -like "*$wordToComplete*"))
+                            )
+                        {
+                            $matches[1]
+                        }
+                    }
+        }
+     })]
     [string[]] $Tasks,
     [string] $Version,
     [string] $LocalNugetFolder
@@ -61,16 +77,16 @@ foreach ($t in $myTasks) {
                     }
                     }
             }
-            'ObjectFactoryBuild' {
+            'Build' {
                 executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {
                     dotnet build
                     }
             }
-            'ObjectFactoryTest' {
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/ObjectFactoryTestInterface') {
+            'Test' {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
                     dotnet build
                     }
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/ObjectFactoryTestWorkers') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
                     $localNuget = dotnet nuget list source | Select-String "Local \[Enabled" -Context 0,1
                     if ($localNuget) {
                         dotnet pack -o ($localNuget.Context.PostContext.Trim()) --include-source -p:Version=1.0.2 -p:AssemblyVersion=1.0.2
@@ -78,11 +94,11 @@ foreach ($t in $myTasks) {
                         throw "Must have a Local NuGet source for testing. e.g. dotnet nuget sources add -name Local -source c:\nupkgs"
                     }
                     }
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/unit') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
                     dotnet test --collect:"XPlat Code Coverage"
                     }
             }
-            'ObjectFactoryPack' {
+            'Pack' {
                 if ($Version) {
                     "Packing with version $Version"
                     executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {

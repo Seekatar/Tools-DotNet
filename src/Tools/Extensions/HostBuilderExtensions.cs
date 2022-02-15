@@ -6,150 +6,148 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace Seekatar.Tools;
-
-/// <summary>
-/// Extensions for HostBuilder
-/// </summary>
-public static class HostBuilderExtensions
+namespace Seekatar.Tools
 {
-    const string SharedDevSettingsName = "shared.appsettings.Development.json";
-    const string SharedDevSettingsConfigName = "sharedDevSettingsPath";
 
-    private static string GetPath(string fileName, IConfiguration? config = null)
+    /// <summary>
+    /// Extensions for HostBuilder
+    /// </summary>
+    public static class HostBuilderExtensions
     {
-        if (config != null && config[SharedDevSettingsConfigName] != null)
+        const string SharedDevSettingsName = "shared.appsettings.Development.json";
+        const string SharedDevSettingsConfigName = "sharedDevSettingsPath";
+
+        private static string GetPath(string fileName, IConfiguration? config = null)
         {
-            return config[SharedDevSettingsConfigName];
-        }
-        else
-        {
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Directory.GetCurrentDirectory();
-            while (dir != null)
+            if (config != null && config[SharedDevSettingsConfigName] != null)
             {
-                var path = Path.Join(dir, fileName);
-                if (File.Exists(path))
+                return config[SharedDevSettingsConfigName];
+            }
+            else
+            {
+                var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Directory.GetCurrentDirectory();
+                while (dir != null)
                 {
-                    return path;
+                    var path = Path.Join(dir, fileName);
+                    if (File.Exists(path))
+                    {
+                        return path;
+                    }
+
+                    dir = Path.GetDirectoryName(dir);
                 }
 
-                dir = Path.GetDirectoryName(dir);
+                Console.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
+                Debug.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
+
+                return "";
             }
-
-            Console.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
-            Debug.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
-
-            return "";
         }
-    }
 
-    /// <summary>
-    /// Get the path of a shared settings file by looking up until it finds it
-    /// </summary>
-    /// <param name="fileName">Name of file to find</param>
-    /// <returns>fully qualified name or null</returns>
-    public static string GetSharedSettingsPath(string fileName = SharedDevSettingsName)
-    {
-        return GetPath(fileName);
-    }
-
-    /// <summary>
-    /// Add a shared dev settings file for dev builds for non-minimal web apps
-    /// </summary>
-    /// <param name="builder">host builder</param>
-    /// <param name="optional">should this config be optional?</param>
-    /// <param name="reloadOnChange">switch to set for reload on change</param>
-    /// <param name="fileName">overrider default name of shared_appsettings.Developement.json</param>
-    /// <remarks>
-    /// Call in program.cs to build IConfiguration with this. Add if first to be lowest priority.
-    /// </remarks>
-    /// <returns>builder</returns>
-    public static IHostBuilder InsertSharedDevSettings(this IHostBuilder builder, bool optional = true, bool reloadOnChange = true, string? fileName = null)
-    {
-        if (builder == null) { throw new ArgumentNullException(nameof(builder)); }
-
-        builder.ConfigureAppConfiguration((hostingContext, builder) =>
+        /// <summary>
+        /// Get the path of a shared settings file by looking up until it finds it
+        /// </summary>
+        /// <param name="fileName">Name of file to find</param>
+        /// <returns>fully qualified name or null</returns>
+        public static string GetSharedSettingsPath(string fileName = SharedDevSettingsName)
         {
-            InsertSharedDevSettings(builder, optional, reloadOnChange, fileName);
-        });
-        return builder;
-    }
-
-    /// <summary>
-    /// Add a shared dev settings file for dev builds for console apps
-    /// </summary>
-    /// <param name="builder">ConfigurationBuilder</param>
-    /// <param name="optional">should this config be optional?</param>
-    /// <param name="reloadOnChange">switch to set for reload on change</param>
-    /// <param name="fileName">override default name of shared_appsettings.Developement.json</param>
-    /// <example>
-    /// <code>
-    /// var configuration = new ConfigurationBuilder()
-    ///                        .AddSharedDevSettings()
-    ///                        .AddJsonFile("appsettings.json", true, true)
-    ///                        .AddEnvironmentVariables()
-    ///                        .Build();
-    /// </code>
-    /// </example>
-    /// <returns>builder</returns>
-    public static IConfigurationBuilder AddSharedDevSettings(this IConfigurationBuilder builder,
-                                                             bool optional = true,
-                                                             bool reloadOnChange = false,
-                                                             string? fileName = null)
-    {
-        if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
-        if (!string.IsNullOrWhiteSpace(fileName))
-        {
-            builder.AddJsonFile(GetPath(fileName), optional, reloadOnChange);
+            return GetPath(fileName);
         }
-        return builder;
-    }
 
-    /// <summary>
-    /// Add a shared dev settings file for dev builds for console or minimal API apps
-    /// </summary>
-    /// <param name="builder">ConfigurationBuilder</param>
-    /// <param name="optional">should this config be optional?</param>
-    /// <param name="reloadOnChange">switch to set for reload on change</param>
-    /// <param name="fileName">override default name of shared_appsettings.Developement.json</param>
-    /// <example>
-    /// <code>
-    /// var configuration = new ConfigurationBuilder()
-    ///                        .AddSharedDevSettings()
-    ///                        .AddJsonFile("appsettings.json", true, true)
-    ///                        .AddEnvironmentVariables()
-    ///                        .Build();
-    /// </code>
-    /// </example>
-    /// <returns>builder</returns>
-    public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder, bool optional = true, bool reloadOnChange = true, string? fileName = null)
-    {
-        if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
-
-        var config = builder.Build();
-
-        if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),"Development",StringComparison.OrdinalIgnoreCase) ||
-            String.Equals(Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase))
+        /// <summary>
+        /// Add a shared dev settings file for dev builds for console apps
+        /// </summary>
+        /// <param name="builder">ConfigurationBuilder</param>
+        /// <param name="reloadOnChange">switch to set for reload on change</param>
+        /// <param name="fileName">override default name of shared_appsettings.Development.json</param>
+        /// <example>
+        /// <code>
+        /// var configuration = new ConfigurationBuilder()
+        ///                        .AddSharedDevSettings()
+        ///                        .AddJsonFile("appsettings.json", true, true)
+        ///                        .AddEnvironmentVariables()
+        ///                        .Build();
+        /// </code>
+        /// </example>
+        /// <returns>builder</returns>
+        public static IConfigurationBuilder AddSharedDevSettings(this IConfigurationBuilder builder,
+                                                                 bool reloadOnChange = false,
+                                                                 string? fileName = null)
         {
-            // set as low priority 
-            // very roughly based on https://jumpforjoysoftware.com/2018/09/aspnet-core-shared-settings/
-            // ResolveFileProvider was the trick
-
-            var path = GetPath(fileName, config);
-
-            if (File.Exists(path))
+            if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
+            if (!string.IsNullOrWhiteSpace(fileName))
             {
-                var sharedConfig = new JsonConfigurationSource
-                {
-                    Path = path,
-                    Optional = optional,
-                    ReloadOnChange = reloadOnChange
-                };
-                sharedConfig.ResolveFileProvider();
-                builder.Sources.Insert(0, sharedConfig);
+                builder.AddJsonFile(GetPath(fileName), optional: false, reloadOnChange);
             }
+            return builder;
         }
-        return builder;
-    }
-}
 
+        /// <summary>
+        /// Add a shared dev settings file for dev builds for non-minimal web apps
+        /// </summary>
+        /// <param name="builder">host builder</param>
+        /// <param name="reloadOnChange">switch to set for reload on change</param>
+        /// <param name="fileName">overrider default name of shared_appsettings.Development.json</param>
+        /// <remarks>
+        /// Call in program.cs to build IConfiguration with this. Add if first to be lowest priority.
+        /// </remarks>
+        /// <returns>builder</returns>
+        public static IHostBuilder InsertSharedDevSettings(this IHostBuilder builder, bool reloadOnChange = true, string? fileName = null)
+        {
+            if (builder == null) { throw new ArgumentNullException(nameof(builder)); }
+
+            builder.ConfigureAppConfiguration((hostingContext, builder) =>
+            {
+                InsertSharedDevSettings(builder, reloadOnChange, fileName);
+            });
+            return builder;
+        }
+
+        /// <summary>
+        /// Add a shared dev settings file for dev builds for console or minimal API apps
+        /// </summary>
+        /// <param name="builder">ConfigurationBuilder</param>
+        /// <param name="reloadOnChange">switch to set for reload on change</param>
+        /// <param name="fileName">override default name of shared_appsettings.Development.json</param>
+        /// <example>
+        /// <code>
+        /// var configuration = new ConfigurationBuilder()
+        ///                        .AddSharedDevSettings()
+        ///                        .AddJsonFile("appsettings.json", true, true)
+        ///                        .AddEnvironmentVariables()
+        ///                        .Build();
+        /// </code>
+        /// </example>
+        /// <returns>builder</returns>
+        public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder, bool reloadOnChange = true, string? fileName = null)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
+
+            var config = builder.Build();
+
+            if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase))
+            {
+                // set as low priority
+                // very roughly based on https://jumpforjoysoftware.com/2018/09/aspnet-core-shared-settings/
+                // ResolveFileProvider was the trick
+
+                var path = GetPath(fileName, config);
+
+                if (File.Exists(path))
+                {
+                    var sharedConfig = new JsonConfigurationSource
+                    {
+                        Path = path,
+                        Optional = true,
+                        ReloadOnChange = reloadOnChange
+                    };
+                    sharedConfig.ResolveFileProvider();
+                    builder.Sources.Insert(0, sharedConfig);
+                }
+            }
+            return builder;
+        }
+    }
+
+}

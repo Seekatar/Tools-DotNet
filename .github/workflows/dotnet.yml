@@ -71,7 +71,15 @@ jobs:
     - name: Publish to GitHub NuGet
       if: startsWith(github.ref, 'refs/heads/releases/') && matrix.os == 'ubuntu-latest'
       run: |
-       "Publishing ./packages/Seekatar.Tools.$env:Version.nupkg"
+       "Publishing ./packages/Seekatar.Tools.$env:Version.nupkg to GitHub"
        dotnet nuget push "./packages/Seekatar.Tools.$env:Version.nupkg" --api-key ${{ secrets.NUGET_PAT }} --source "github"
+      env:
+       Version: ${{ env.Version }}
+
+    - name: Publish to NuGet.org
+      if: startsWith(github.ref, 'refs/heads/releases/') && matrix.os == 'ubuntu-latest'
+      run: |
+       "Publishing ./packages/Seekatar.Tools.$env:Version.nupkg to Nuget.org"
+       dotnet nuget push "./packages/Seekatar.Tools.$env:Version.nupkg" --api-key ${{ secrets.NUGET_ORG_PAT }} --source "https://api.nuget.org/v3/index.json"
       env:
        Version: ${{ env.Version }}

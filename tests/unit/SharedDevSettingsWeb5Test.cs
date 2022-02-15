@@ -14,8 +14,8 @@ namespace Seekatar.Tests;
 
 public class SharedDevSettingsWeb5Test
 {
-    private TestServer _testServer;
-    private HttpClient _testClient;
+    private TestServer? _testServer;
+    private HttpClient? _testClient;
 
     async Task GetEnvValue(string value, string expected)
     {
