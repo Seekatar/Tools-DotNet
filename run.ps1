@@ -83,16 +83,17 @@ foreach ($t in $myTasks) {
                     }
             }
             'Test' {
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
-                    dotnet build
-                    }
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/ObjectFactoryTestWorkers') {
                     $localNuget = dotnet nuget list source | Select-String "Local \[Enabled" -Context 0,1
                     if ($localNuget) {
-                        dotnet pack -o ($localNuget.Context.PostContext.Trim()) --include-source -p:Version=1.0.2 -p:AssemblyVersion=1.0.2
+                        dotnet pack -o ../../../packages --include-source -p:Version=1.0.2 -p:AssemblyVersion=1.0.2
+                        dotnet nuget push "../../../packages/ObjectFactoryTestWorkers.1.0.2.nupkg" -s Local
                     } else {
                         throw "Must have a Local NuGet source for testing. e.g. dotnet nuget sources add -name Local -source c:\nupkgs"
                     }
+                    }
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
+                    dotnet build
                     }
                 executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') {
                     dotnet test --collect:"XPlat Code Coverage"
@@ -107,6 +108,9 @@ foreach ($t in $myTasks) {
                 } else {
                     throw "Must supply Version for pack"
                 }
+            }
+            default {
+                throw "Invalid task name $t"
             }
         }
 
