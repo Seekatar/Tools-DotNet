@@ -74,10 +74,16 @@ namespace Seekatar.Tools
                                                                  bool reloadOnChange = false,
                                                                  string? fileName = null)
         {
-            if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
-            if (!string.IsNullOrWhiteSpace(fileName))
+            if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase))
             {
-                builder.AddJsonFile(GetPath(fileName), optional: false, reloadOnChange);
+                if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
+
+                var path = GetPath(fileName);
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    builder.AddJsonFile(path, optional: false, reloadOnChange);
+                }
             }
             return builder;
         }
@@ -92,7 +98,7 @@ namespace Seekatar.Tools
         /// Call in program.cs to build IConfiguration with this. Add if first to be lowest priority.
         /// </remarks>
         /// <returns>builder</returns>
-        public static IHostBuilder InsertSharedDevSettings(this IHostBuilder builder, bool reloadOnChange = true, string? fileName = null)
+        public static IHostBuilder InsertSharedDevSettings(this IHostBuilder builder, bool reloadOnChange = false, string? fileName = null)
         {
             if (builder == null) { throw new ArgumentNullException(nameof(builder)); }
 
@@ -119,7 +125,7 @@ namespace Seekatar.Tools
         /// </code>
         /// </example>
         /// <returns>builder</returns>
-        public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder, bool reloadOnChange = true, string? fileName = null)
+        public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder, bool reloadOnChange = false, string? fileName = null)
         {
             if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
 

@@ -13,9 +13,29 @@
     <Company>Seekatar</Company>
     <RepositoryUrl>https://github.com/seekatar/Tools-DotNet</RepositoryUrl>
     <Description>
-    This library contains various .NET tools, such as ObjectFactory.
+    This library contains various .NET tools, such as ObjectFactory, Configuration extensions.
     </Description>
+    <Copyright>Copyright (c) 2022</Copyright>
+    <PackageProjectUrl>https://github.com/Seekatar/Tools-DotNet</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>.net;core;configuration;tools</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />

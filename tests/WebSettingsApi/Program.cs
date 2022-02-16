@@ -2,7 +2,7 @@ using Seekatar.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.InsertSharedDevSettings();
+builder.Configuration.InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"));
 
 // Add services to the container.
 

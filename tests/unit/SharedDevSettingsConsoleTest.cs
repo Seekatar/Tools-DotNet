@@ -23,6 +23,7 @@ public class SharedDevSettingsConsoleTest
     static IConfiguration SetupConsole(string? filename = null, string expectedName = "DEV", bool reloadOnChange = false)
     {
         Environment.SetEnvironmentVariable("InEnvironment", "ENV");
+        Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "Development");
 
         var configuration = new ConfigurationBuilder()
                        .AddSharedDevSettings(reloadOnChange, filename)
@@ -47,6 +48,13 @@ public class SharedDevSettingsConsoleTest
     {
         SetupConsole("differentName.appsettings.Development.json", "DIFFERENT");
     }
+
+    [Test]
+    public void TestConsoleNameDoesntExist()
+    {
+        SetupConsole("notfound.json", null);
+    }
+
 
     [Test]
     public async Task TestConsoleReload()
