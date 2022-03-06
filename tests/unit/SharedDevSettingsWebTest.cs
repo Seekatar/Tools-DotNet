@@ -3,73 +3,54 @@ using NUnit.Framework;
 using Shouldly;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Seekatar.Tests;
 
 public class SharedDevSettingsWebTest
 {
-#if NET6_0_OR_GREATER
-    private WebApplicationFactory<Program>? _application;
-    private HttpClient? _client;
-#elif NET5_0
-    private TestServer _testServer;
-    private HttpClient _testClient;
-#else
-#error "Must be .NET 5 or higher"
-#endif
-
-    async Task GetEnvValue(string value, string expected)
+    async static Task GetEnvValue(HttpClient client, string value, string expected)
     {
-        var response = await _client!.GetStringAsync($"/config/{value}");
+        var response = await client!.GetStringAsync($"/config/{value}");
 
         response.ShouldBe(expected);
+    }
+
+    async static Task RunTest(string? environment = "Development", string configFile = "", string expectedValue = "DEV")
+    {
+        System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
+        System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
+
+        var application = new WebApplicationFactory<Program>();
+        var client = application.CreateClient();
+
+        await GetEnvValue(client, "InAppSettings", "APP");
+        await GetEnvValue(client, "InEnvironment", "ENV");
+        await GetEnvValue(client, "InDevSettings", expectedValue);
+
+        application?.Dispose();
+        client?.Dispose();
     }
 
     [Test]
     public async Task TestDefault()
     {
-        await GetEnvValue("InAppSettings", "APP");
-        await GetEnvValue("InEnvironment", "ENV");
-        await GetEnvValue("InDevSettings", "DEV");
+        await RunTest();
     }
 
-    [SetUp]
-    public void Setup()
+    [Test]
+    public async Task TestNoConfigFile()
     {
-        System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
-        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "Development");
-
-#if NET6_0_OR_GREATER
-        _application = new WebApplicationFactory<Program>();
-        _client = _application.CreateClient();
-#elif NET5_0
-
-
-        // .NET 5 way https://scotthannen.org/blog/2021/11/18/testserver-how-did-i-not-know.html
-            _testServer = new TestServer(
-                new WebHostBuilder()
-                    .ConfigureAppConfiguration(configurationBuilder =>
-                    {
-                        configurationBuilder.AddJsonFile("appsetting.json");
-                    })
-                    .
-                    .UseStartup<Startup>());
-            _testClient = _testServer.CreateClient();
-#endif
+        await RunTest(configFile:"ZZZ", expectedValue: "");
     }
 
-    [TearDown]
-    public void TearDown()
+    [TestCase("ZZZZ")]
+    [TestCase("Release")]
+    [TestCase(null)]
+    public async Task TestTurnedOff(string ? environment)
     {
-#if NET6_0_OR_GREATER
-        _application?.Dispose();
-        _client?.Dispose();
-#elif NET5_0
-
-        _testClient?.Dispose();
-        _testServer?.Dispose();
-#endif
+        await RunTest(environment: "ZZZ", configFile: "", expectedValue: "");
     }
 }
 

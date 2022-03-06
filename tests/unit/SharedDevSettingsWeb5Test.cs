@@ -2,8 +2,6 @@
 using NUnit.Framework;
 using Shouldly;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
 using WebSettings5Api;
@@ -14,12 +12,9 @@ namespace Seekatar.Tests;
 
 public class SharedDevSettingsWeb5Test
 {
-    private TestServer? _testServer;
-    private HttpClient? _testClient;
-
-    async Task GetEnvValue(string value, string expected)
+    async static Task GetEnvValue(HttpClient client, string value, string expected)
     {
-        var response = await _testClient!.GetStringAsync($"/config/{value}");
+        var response = await client!.GetStringAsync($"/config/{value}");
 
         response.ShouldBe(expected);
     }
@@ -27,36 +22,47 @@ public class SharedDevSettingsWeb5Test
     [Test]
     public async Task TestDefault()
     {
-        await GetEnvValue("InAppSettings", "APP");
-        await GetEnvValue("InEnvironment", "ENV");
-        await GetEnvValue("InDevSettings", "DEV");
+        await RunTest();
     }
 
-    [SetUp]
-    public void Setup()
+    [Test]
+    public async Task TestNoConfigFile()
+    {
+        await RunTest(configFile: "ZZZ", expectedValue: "");
+    }
+
+    [Test]
+    public async Task TestTurnedOff()
+    {
+        await RunTest(environment: "ZZZ", configFile: "", expectedValue: "");
+    }
+
+    async static Task RunTest(string environment = "Development", string configFile = "", string expectedValue = "DEV")
     {
         System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
-        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "Development");
+        System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
 
         // .NET 5 way https://scotthannen.org/blog/2021/11/18/testserver-how-did-i-not-know.html
-            _testServer = new TestServer(
+        var testServer = new TestServer(
                 new WebHostBuilder()
                     .ConfigureAppConfiguration(configurationBuilder =>
                     {
-                        configurationBuilder.InsertSharedDevSettings()
+                        configurationBuilder.InsertSharedDevSettings(reloadOnChange: false, configFile)
                                             .AddJsonFile("appsettings.json")
                                             .AddEnvironmentVariables();
 
                     })
                     .UseStartup<Startup>());
-            _testClient = _testServer.CreateClient();
-    }
+        var testClient = testServer.CreateClient();
 
-    [TearDown]
-    public void TearDown()
-    {
-        _testClient?.Dispose();
-        _testServer?.Dispose();
+        await GetEnvValue(testClient, "InAppSettings", "APP");
+        await GetEnvValue(testClient, "InEnvironment", "ENV");
+        await GetEnvValue(testClient, "InDevSettings", expectedValue);
+
+        testClient?.Dispose();
+        testServer?.Dispose();
     }
 }
 

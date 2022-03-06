@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Seekatar.Tools;
 
 namespace WebSettings5Api
@@ -15,7 +9,7 @@ namespace WebSettings5Api
         public static void Main(string[] args)
         {
             CreateHostBuilder(args)
-                .InsertSharedDevSettings()
+                .InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"))
                 .Build()
                 .Run();
         }
