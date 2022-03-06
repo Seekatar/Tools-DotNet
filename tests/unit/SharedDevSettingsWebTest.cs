@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Shouldly;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Seekatar.Tests;
 
@@ -16,7 +15,7 @@ public class SharedDevSettingsWebTest
         response.ShouldBe(expected);
     }
 
-    async static Task RunTest(string environment = "Development", string configFile = "", string expectedValue = "DEV")
+    async static Task RunTest(string? environment = "Development", string configFile = "", string expectedValue = "DEV")
     {
         System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
         System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
@@ -46,8 +45,10 @@ public class SharedDevSettingsWebTest
         await RunTest(configFile:"ZZZ", expectedValue: "");
     }
 
-    [Test]
-    public async Task TestTurnedOff()
+    [TestCase("ZZZZ")]
+    [TestCase("Release")]
+    [TestCase(null)]
+    public async Task TestTurnedOff(string ? environment)
     {
         await RunTest(environment: "ZZZ", configFile: "", expectedValue: "");
     }

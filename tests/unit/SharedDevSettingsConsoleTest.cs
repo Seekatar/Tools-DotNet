@@ -1,14 +1,9 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using Seekatar.Interfaces;
 using Seekatar.Tools;
 using Shouldly;
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Seekatar.Tests;
@@ -20,7 +15,7 @@ public class SharedDevSettingsConsoleTest
     {
     }
 
-    static IConfiguration SetupConsole(string? filename = null, string expectedName = "DEV", bool reloadOnChange = false)
+    static IConfiguration SetupConsole(string? filename = null, string? expectedName = "DEV", bool reloadOnChange = false)
     {
         Environment.SetEnvironmentVariable("InEnvironment", "ENV");
         Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "Development");
