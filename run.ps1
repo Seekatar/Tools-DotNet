@@ -102,9 +102,10 @@ foreach ($t in $myTasks) {
             }
             'Pack' {
                 if ($Version) {
-                    "Packing with version $Version"
+                    "Packing with version $Version in $PWD"
                     executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') -Name 'Pack' {
-                        dotnet pack -o ../../packages --include-source -p:Version=$Version -p:AssemblyVersion=$Version
+                        $justVersion = $Version.Split('-')[0]
+                        dotnet pack -o ../../packages --include-source -p:Version=$Version -p:PackageVersion=$Version -p:AssemblyVersion=$justVersion
                     }
                 } else {
                     throw "Must supply Version for pack"
