@@ -19,7 +19,14 @@
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.border": "#896724",
         "titleBar.inactiveBackground": "#89672499",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "commandCenter.border": "#e7e7e799",
+        "editorGroup.border": "#b1852f",
+        "panel.border": "#b1852f",
+        "sideBar.border": "#b1852f",
+        "statusBar.debuggingBackground": "#244689",
+        "statusBar.debuggingBorder": "#244689",
+        "statusBar.debuggingForeground": "#e7e7e7"
     },
     "peacock.color": "#896724",
     "cSpell.words": [

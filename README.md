@@ -1,6 +1,6 @@
 # Seekatar's .NET Tools
 
-This repo contains various .NET tools for .NET 5+
+This repo contains various .NET tools for .NET 6+
 
 [![.NET](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml)
 [![codecov](https://codecov.io/gh/Seekatar/Tools-DotNet/branch/main/graph/badge.svg?token=X3J5MU9T3C)](https://codecov.io/gh/Seekatar/Tools-DotNet)

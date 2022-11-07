@@ -22,10 +22,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.0.2
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3.0.3
       with:
         dotnet-version: 6.0.x
 
@@ -35,14 +35,14 @@ jobs:
 
     - name: Determine Version
       run: |
-        if ('${{ github.ref }}' -match ".*/v{0,1}(?<ver>\d\.\d\.\d)(?:-(?<prerelease>[0-9a-z]+)(?<rest>.*))?" `
+        if ('${{ github.ref }}' -match ".*/v{0,1}(?<ver>\d\.\d\.\d)(?:(?<prerelease>-[0-9a-z]+)(?<rest>.*))?" `
             -and (!$matches['rest'] -or !$matches['rest'].StartsWith('-'))) {
-            $newVersion = $matches['ver']
+            $newVersion = $matches['ver']+$matches['prerelease']
         } else {
             $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
         }
         "Version=$newVersion written to $env:GITHUB_ENV"
-        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append
+        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
 
     - name: Dump Environment
       run: |
