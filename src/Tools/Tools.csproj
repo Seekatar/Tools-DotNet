@@ -1,26 +1,77 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>Seekatar.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Seekatar.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <IsPackable>true</IsPackable>
     <PackageId>Seekatar.Tools</PackageId>
     <Version>1.0.0</Version>
+<<<<<<< HEAD
     <Authors>Seekatar.</Authors>
     <Company>Seekatar</Company>
     <RepositoryUrl>https://github.com/seekatar/WebApi-DotNet-6</RepositoryUrl>
     <Description>
     This library contains various .NET tools
     </Description>
+=======
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Seekatar.</Authors>
+    <Company>Seekatar</Company>
+    <RepositoryUrl>https://github.com/seekatar/Tools-DotNet</RepositoryUrl>
+    <Description>
+    This library contains various .NET tools, such as ObjectFactory, Configuration extensions.
+    </Description>
+    <Copyright>Copyright (c) 2022</Copyright>
+    <PackageProjectUrl>https://github.com/Seekatar/Tools-DotNet</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>.net;core;configuration;tools</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- added for source links  (also need PackageProjectUrl)-->
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- added for source links  for deterministic builds -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+>>>>>>> releases/v0.1.3-prerelease
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

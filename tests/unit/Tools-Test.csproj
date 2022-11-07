@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -9,7 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
@@ -17,13 +20,21 @@
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
-    <PackageReference Include="ObjectFactoryTestWorkers" Version="1.0.1" />
+    <PackageReference Include="ObjectFactoryTestWorkers" Version="1.0.2" />
     <PackageReference Include="Shouldly" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ObjectFactoryTestInterface\ObjectFactoryTestInterface.csproj" />
-    <ProjectReference Include="..\..\..\src\Tools\Tools.csproj" />
+    <ProjectReference Include="..\WebSettings5Api\WebSettings5Api.csproj" />
+    <ProjectReference Include="..\WebSettingsApi\WebSettingsApi.csproj" />
+    <ProjectReference Include="..\ObjectFactoryTests\ObjectFactoryTestInterface\ObjectFactoryTestInterface.csproj" />
+    <ProjectReference Include="..\..\src\Tools\Tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
