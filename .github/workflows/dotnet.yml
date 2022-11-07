@@ -42,17 +42,17 @@ jobs:
             $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
         }
         "Version=$newVersion written to $env:GITHUB_ENV"
-        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append
+        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
 
     - name: Dump Environment
       run: |
-       "::group::Pwsh Version"
-       $PSVersionTable
-       "::endgroup::"
+       Write-Host "::group::Pwsh Version"
+       Write-Host $PSVersionTable
+       Write-Host "::endgroup::"
 
-       "::group::Environment Variables"
-       gci env: | ft -wrap
-       "::endgroup::"
+       Write-Host "::group::Environment Variables"
+       Write-Host gci env: | ft -wrap
+       Write-Host "::endgroup::"
 
     - name: Do CI Build and Test
       run: |
