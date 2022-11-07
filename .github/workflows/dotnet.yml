@@ -45,6 +45,7 @@ jobs:
         "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
 
     - name: Dump Environment
+      if: false
       run: |
        "::group::Pwsh Version"
        $PSVersionTable
