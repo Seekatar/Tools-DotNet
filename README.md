@@ -2,19 +2,6 @@
 
 This repo contains various .NET tools for .NET 6+
 
-<<<<<<< HEAD
-## [ObjectFactory](src/Tools/ObjectFactory/README.md)
-ObjectFactory discovers derived `Types` and allows them to be created later.
-
-[![.NET](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml)
-[![codecov](https://codecov.io/gh/Seekatar/Tools-DotNet/branch/main/graph/badge.svg?token=X3J5MU9T3C)](https://codecov.io/gh/Seekatar/Tools-DotNet)
-
-## Pulling From GitHub NuGet Repo
-
-Add a new nuget source
-
-```PowerShell
-=======
 [![.NET](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Seekatar/Tools-DotNet/actions/workflows/dotnet.yml)
 [![codecov](https://codecov.io/gh/Seekatar/Tools-DotNet/branch/main/graph/badge.svg?token=X3J5MU9T3C)](https://codecov.io/gh/Seekatar/Tools-DotNet)
 
@@ -37,6 +24,5 @@ dotnet add package Seekatar.Tools
 Originally was in a GitHub NuGet repo. To add a new NuGet source
 
 ```powershell
->>>>>>> releases/v0.1.3-prerelease
 dotnet nuget add source --username $username --password $pat --store-password-in-clear-text --name github "https://nuget.pkg.github.com/seekatar/index.json"
 ```

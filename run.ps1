@@ -1,7 +1,4 @@
 param (
-<<<<<<< HEAD
-    [ValidateSet('ObjectFactoryBuild','ObjectFactoryPack','ObjectFactoryTest','ci','CreateLocalNuget')]
-=======
     [ArgumentCompleter({
         param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
         $runFile = (Join-Path (Split-Path $commandAst -Parent) run.ps1)
@@ -19,7 +16,6 @@ param (
                     }
         }
      })]
->>>>>>> releases/v0.1.3-prerelease
     [string[]] $Tasks,
     [string] $Version,
     [string] $LocalNugetFolder
@@ -53,11 +49,7 @@ param(
 }
 
 if ($Tasks -eq "ci") {
-<<<<<<< HEAD
-    $myTasks = @('CreateLocalNuget','ObjectFactoryBuild','ObjectFactoryTest','ObjectFactoryPack')
-=======
     $myTasks = @('CreateLocalNuget','Build','Test','Pack')
->>>>>>> releases/v0.1.3-prerelease
 } else {
     $myTasks = $Tasks
 }
@@ -101,17 +93,6 @@ foreach ($t in $myTasks) {
                         throw "Must have a Local NuGet source for testing. e.g. dotnet nuget sources add -name Local -source c:\nupkgs"
                     }
                     }
-<<<<<<< HEAD
-                executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/ObjectFactoryTests/unit') {
-                    dotnet test --collect:"XPlat Code Coverage"
-                    }
-            }
-            'ObjectFactoryPack' {
-                if ($Version) {
-                    "Packing with version $Version"
-                    executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') {
-                        dotnet pack -o ../../packages --include-source -p:Version=$Version -p:AssemblyVersion=$Version
-=======
                 executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/tests/unit') -Name 'Build test' {
                     dotnet build
                     }
@@ -125,18 +106,14 @@ foreach ($t in $myTasks) {
                     executeSB -WorkingDirectory (Join-Path $PSScriptRoot '/src/Tools') -Name 'Pack' {
                         $justVersion = $Version.Split('-')[0]
                         dotnet pack -o ../../packages --include-source -p:Version=$Version -p:PackageVersion=$Version -p:AssemblyVersion=$justVersion
->>>>>>> releases/v0.1.3-prerelease
                     }
                 } else {
                     throw "Must supply Version for pack"
                 }
             }
-<<<<<<< HEAD
-=======
             default {
                 throw "Invalid task name $t"
             }
->>>>>>> releases/v0.1.3-prerelease
         }
 
     } finally {
