@@ -46,13 +46,13 @@ jobs:
 
     - name: Dump Environment
       run: |
-       Write-Host "::group::Pwsh Version"
-       Write-Host $PSVersionTable
-       Write-Host "::endgroup::"
+       "::group::Pwsh Version" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+       $PSVersionTable | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+       "::endgroup::" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
 
-       Write-Host "::group::Environment Variables"
-       Write-Host gci env: | ft -wrap
-       Write-Host "::endgroup::"
+       "::group::Environment Variables" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+       gci env: | ft -wrap | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+       "::endgroup::" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
 
     - name: Do CI Build and Test
       run: |
