@@ -592,3 +592,5 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,csharp,visualstudio,visualstudiocode
 
 ./packages
+.DS_Store
+package
