@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace WebSettings5Api.Controllers
+namespace WebSettingsApi.Controllers
 {
     [ApiController]
     [Route("config")]

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Tools_Web_Test</RootNamespace>
     <Nullable>enable</Nullable>
 
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebSettingsApi\WebSettingsApi.csproj" />
+    <ProjectReference Include="..\WebSettingsMinimalApi\WebSettingsMinimalApi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,8 @@ This set of configuration extension methods adds a low-priority JSON file to the
 
 ## Install
 
+Installing from the NuGet.org
+
 ```powershell
 dotnet add package Seekatar.Tools
 ```

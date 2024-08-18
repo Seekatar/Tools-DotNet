@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Seekatar.Tools;
 using Shouldly;
 
 namespace Seekatar.Tests;
@@ -8,17 +7,17 @@ namespace Seekatar.Tests;
 public class ObjectFactoryTests
 {
     private ServiceProvider? _provider;
-    private ObjectFactory<ITestWorker>? _factory;
+    private Tools.ObjectFactory<ITestWorker>? _factory;
 
     [SetUp]
     public void Setup()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddSingleton<ObjectFactory<ITestWorker>>();
+        serviceCollection.AddSingleton<Tools.ObjectFactory<ITestWorker>>();
         serviceCollection.AddSingleton<ITestWorker,TestSummer>();
 
-        serviceCollection.AddOptions<ObjectFactoryOptions>().Configure(options => {
+        serviceCollection.AddOptions<Tools.ObjectFactoryOptions>().Configure(options => {
             options.AssemblyNameMask = "O*";
             options.AssemblyNameRegEx = "(O.*|Tools-Test)";
         });
@@ -26,7 +25,7 @@ public class ObjectFactoryTests
         _provider = serviceCollection.BuildServiceProvider();
         _provider.ShouldNotBeNull();
 
-        _factory = _provider!.GetService<ObjectFactory<ITestWorker>>();
+        _factory = _provider!.GetService<Tools.ObjectFactory<ITestWorker>>();
         _factory.ShouldNotBeNull();
     }
 

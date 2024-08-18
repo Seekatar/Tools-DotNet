@@ -1,7 +1,19 @@
 # Change Log
 
+## [0.1.4] 2024-8-18
+
+### Changed
+
+- Upgraded to .NET 8 and dependencies
+
+## [0.1.3] 2024-8-12
+
+### Changed
+
+- Upgrade some NuGet packages tagged as vulnerable
+
 ## [0.1.2] 2022-11-07
 
-## Added
+### Added
 
 - Added source links per this [doc](https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/)

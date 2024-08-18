@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectFactoryTestWorkers", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectFactoryTestInterface", "tests\ObjectFactoryTests\ObjectFactoryTestInterface\ObjectFactoryTestInterface.csproj", "{4D9D2940-1A17-47D3-A7F2-EF52958DE0DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettingsApi", "tests\WebSettingsApi\WebSettingsApi.csproj", "{B36EAE08-74CB-47D1-A488-2A890F79AAFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettingsMinimalApi", "tests\WebSettingsMinimalApi\WebSettingsMinimalApi.csproj", "{B36EAE08-74CB-47D1-A488-2A890F79AAFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettings5Api", "tests\WebSettings5Api\WebSettings5Api.csproj", "{9F400274-EDC9-459E-ABF0-0933E1C78959}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSettingsApi", "tests\WebSettingsApi\WebSettingsApi.csproj", "{9F400274-EDC9-459E-ABF0-0933E1C78959}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,7 +21,7 @@ namespace Seekatar.Tools
         {
             if (config != null && config[SharedDevSettingsConfigName] != null)
             {
-                return config[SharedDevSettingsConfigName];
+                return config[SharedDevSettingsConfigName]!;
             }
             else
             {
