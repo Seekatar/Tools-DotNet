@@ -75,6 +75,7 @@ namespace Seekatar.Tools
                                                                  string? fileName = null)
         {
             if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
                 String.Equals(Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase))
             {
                 if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
@@ -93,7 +94,7 @@ namespace Seekatar.Tools
         /// </summary>
         /// <param name="hostBuilder">host builder</param>
         /// <param name="reloadOnChange">switch to set for reload on change</param>
-        /// <param name="fileName">overrider default name of shared_appsettings.Development.json</param>
+        /// <param name="fileName">override default name of shared_appsettings.Development.json</param>
         /// <remarks>
         /// Call in program.cs to build IConfiguration with this. Add if first to be lowest priority.
         /// </remarks>
@@ -132,6 +133,7 @@ namespace Seekatar.Tools
             var config = builder.Build();
 
             if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
                 String.Equals(Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase))
             {
                 // set as low priority

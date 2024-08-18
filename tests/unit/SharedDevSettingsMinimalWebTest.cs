@@ -20,6 +20,7 @@ public class SharedDevSettingsMinimalWebTest
         System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
         System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
         System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
 
         var application = new WebApplicationFactory<Program>();

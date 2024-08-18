@@ -42,6 +42,7 @@ public class SharedDevSettingsWebTest
         System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
         System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
         System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
 
         // .NET 5 way https://scotthannen.org/blog/2021/11/18/testserver-how-did-i-not-know.html

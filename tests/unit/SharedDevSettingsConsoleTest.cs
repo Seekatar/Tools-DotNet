@@ -18,7 +18,7 @@ public class SharedDevSettingsConsoleTest
     static IConfiguration SetupConsole(string? filename = null, string? expectedName = "DEV", bool reloadOnChange = false)
     {
         Environment.SetEnvironmentVariable("InEnvironment", "ENV");
-        Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "Development");
+        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Development");
 
         var configuration = new ConfigurationBuilder()
                        .AddSharedDevSettings(reloadOnChange, filename)
