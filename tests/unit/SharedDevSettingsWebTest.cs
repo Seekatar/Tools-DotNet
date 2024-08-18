@@ -2,7 +2,11 @@
 using NUnit.Framework;
 using Shouldly;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Hosting;
+using WebSettingsApi;
+using Seekatar.Tools;
+using Microsoft.Extensions.Configuration;
 
 namespace Seekatar.Tests;
 
@@ -15,24 +19,6 @@ public class SharedDevSettingsWebTest
         response.ShouldBe(expected);
     }
 
-    async static Task RunTest(string? environment = "Development", string configFile = "", string expectedValue = "DEV")
-    {
-        System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
-        System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
-        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
-        System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
-
-        var application = new WebApplicationFactory<Program>();
-        var client = application.CreateClient();
-
-        await GetEnvValue(client, "InAppSettings", "APP");
-        await GetEnvValue(client, "InEnvironment", "ENV");
-        await GetEnvValue(client, "InDevSettings", expectedValue);
-
-        application?.Dispose();
-        client?.Dispose();
-    }
-
     [Test]
     public async Task TestDefault()
     {
@@ -42,15 +28,42 @@ public class SharedDevSettingsWebTest
     [Test]
     public async Task TestNoConfigFile()
     {
-        await RunTest(configFile:"ZZZ", expectedValue: "");
+        await RunTest(configFile: "ZZZ", expectedValue: "");
     }
 
-    [TestCase("ZZZZ")]
-    [TestCase("Release")]
-    [TestCase(null)]
-    public async Task TestTurnedOff(string ? environment)
+    [Test]
+    public async Task TestTurnedOff()
     {
         await RunTest(environment: "ZZZ", configFile: "", expectedValue: "");
+    }
+
+    async static Task RunTest(string environment = "Development", string configFile = "", string expectedValue = "DEV")
+    {
+        System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
+        System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", environment);
+        System.Environment.SetEnvironmentVariable("CONFIG_FILE", configFile);
+
+        // .NET 5 way https://scotthannen.org/blog/2021/11/18/testserver-how-did-i-not-know.html
+        var testServer = new TestServer(
+                new WebHostBuilder()
+                    .ConfigureAppConfiguration(configurationBuilder =>
+                    {
+                        configurationBuilder.InsertSharedDevSettings(reloadOnChange: false, configFile)
+                                            .AddJsonFile("appsettings.json")
+                                            .AddEnvironmentVariables();
+
+                    })
+                    .UseStartup<Startup>());
+        var testClient = testServer.CreateClient();
+
+        await GetEnvValue(testClient, "InAppSettings", "APP");
+        await GetEnvValue(testClient, "InEnvironment", "ENV");
+        await GetEnvValue(testClient, "InDevSettings", expectedValue);
+
+        testClient?.Dispose();
+        testServer?.Dispose();
     }
 }
 

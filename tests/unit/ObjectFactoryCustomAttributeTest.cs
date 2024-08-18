@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Seekatar.Tests;
 
-class WorkerAttributeFactory : ObjectFactory<ITestWorker>
+class WorkerAttributeFactory : Seekatar.Tools.ObjectFactory<ITestWorker>
 {
     public WorkerAttributeFactory(IServiceProvider provider, IOptions<ObjectFactoryOptions> options) : base(provider, options)
     { }

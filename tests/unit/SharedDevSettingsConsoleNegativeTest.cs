@@ -18,6 +18,7 @@ public class SharedDevSettingsConsoleNegativeTest
         Environment.SetEnvironmentVariable("InEnvironment", "ENV");
 
         // disable using shared settings
+        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "ZZZ");
         Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", "ZZZ");
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "ZZZ");
 

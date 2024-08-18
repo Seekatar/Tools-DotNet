@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Tools_Test;
 
 namespace Seekatar.Tests;
-class ObjectAttributeFactory<T> : ObjectFactory<T>  where T : class
+class ObjectAttributeFactory<T> : Seekatar.Tools.ObjectFactory<T>  where T : class
 {
     public ObjectAttributeFactory(IServiceProvider provider, IOptions<ObjectFactoryOptions> options) : base(provider, options)
     { }

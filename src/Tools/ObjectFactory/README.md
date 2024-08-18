@@ -2,7 +2,7 @@
 
 This tool will create objects by a name of a given `Type`. Registered as a singleton, it will scan loaded assemblies for `Types`, and track ones that you specify. Then you will call `GetInstance` to have the factory return an instance of the class.
 
-This uses the .NET [IServiceProvider](https://docs.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-6.0) to create the instances so they support injecting whatever they need.
+This uses the .NET [IServiceProvider](https://docs.microsoft.com/en-us/dotnet/api/system.iserviceprovider) to create the instances so they support injecting whatever they need.
 
 > If you can use dependency injection to get your objects or an `IEnumerable&lt;baseClass&gt;` that is preferred to a factory. Since this is a Service Resolver (anti)-pattern. ([Or is it?](https://jimmybogard.com/service-locator-is-not-an-anti-pattern/))
 
