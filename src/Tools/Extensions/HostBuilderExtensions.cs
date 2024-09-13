@@ -17,7 +17,7 @@ namespace Seekatar.Tools
         const string SharedDevSettingsName = "shared.appsettings.Development.json";
         const string SharedDevSettingsConfigName = "sharedDevSettingsPath";
 
-        private static string GetPath(string fileName, IConfiguration? config = null)
+        private static string GetPath(string fileName, IConfiguration? config = null, [System.Runtime.CompilerServices.CallerMemberName] string caller = "")
         {
             if (config != null && config[SharedDevSettingsConfigName] != null)
             {
@@ -37,8 +37,8 @@ namespace Seekatar.Tools
                     dir = Path.GetDirectoryName(dir);
                 }
 
-                Console.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
-                Debug.WriteLine($"{nameof(InsertSharedDevSettings)} called, but couldn't find '{fileName}'");
+                Console.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
+                Debug.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
 
                 return "";
             }
