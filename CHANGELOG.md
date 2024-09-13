@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.1.5] 2024-9-13
+
+### Changed
+
+- If the file is not found, now show the correct method name instead of always `InsertSharedDevSettings`
+
+### Changed
+
+- Upgraded to .NET 8 and dependencies
+
 ## [0.1.4] 2024-8-18
 
 ### Added
