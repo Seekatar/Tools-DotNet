@@ -1,10 +1,12 @@
 # Change Log
 
-## [0.1.5] 2024-9-13
+## [0.2.1] 2024-9-13
 
 ### Changed
 
 - If the file is not found, now show the correct method name instead of always `InsertSharedDevSettings`
+
+## [0.2.0] 2024-8-18
 
 ### Changed
 
