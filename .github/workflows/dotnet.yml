@@ -35,14 +35,26 @@ jobs:
 
     - name: Determine Version
       run: |
-        if ('${{ github.ref }}' -match ".*/v{0,1}(?<ver>\d\.\d\.\d)(?:(?<prerelease>-[0-9a-z]+)(?<rest>.*))?" `
-            -and (!$matches['rest'] -or !$matches['rest'].StartsWith('-'))) {
-            $newVersion = $matches['ver']+$matches['prerelease']
-        } else {
-            $newVersion = "1.0.$env:GITHUB_RUN_NUMBER"
+        $inVersion = $false
+        $version = ''
+        'releaseNotes<<EOF_EOF_EOF' | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+        $releaseNotes = ''
+        foreach ( $line in (Get-Content .\CHANGELOG.md)) {
+            if ($line -match '^## \[([\d\.]+)\]') {
+                if ($inVersion) {break}
+                $version = $Matches[1]
+                $inVersion = $true;
+            }
+            if ($inVersion) {$releaseNotes += $line + "`n"}
         }
-        "Version=$newVersion written to $env:GITHUB_ENV"
-        "Version=$newVersion" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+        $releaseNotes | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+        "EOF_EOF_EOF" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+
+        if ($env:branch -ne 'refs/heads/main') {
+            $version += ".$env:runNumber-prerelease" # prerelease is the run number since PR has save version
+        }
+        "version=$version written to $env:GITHUB_ENV"
+        "version=$version" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
 
     - name: Dump Environment
       run: |
@@ -56,7 +68,7 @@ jobs:
 
     - name: Do CI Build and Test
       run: |
-        ./run.ps1 ci -Version $env:Version
+        ./run.ps1 ci -Version $env:version
       env:
        Version: ${{ env.Version }}
 
@@ -69,9 +81,9 @@ jobs:
         bash <(curl -s https://codecov.io/bash)
 
     - name: Publish to NuGet.org
-      if: startsWith(github.ref, 'refs/heads/releases/') && matrix.os == 'ubuntu-latest'
+      if: (github.ref_name == 'main' || (github.base_ref == 'main' && github.event_name == 'pull_request')) && matrix.os == 'ubuntu-latest'
       run: |
-       "Publishing ./packages/Seekatar.Tools.$env:Version.nupkg to Nuget.org"
-       dotnet nuget push "./packages/Seekatar.Tools.$env:Version.nupkg" --api-key ${{ secrets.NUGET_ORG_PAT }} --source "https://api.nuget.org/v3/index.json"
+       "Publishing ./packages/Seekatar.Tools.$env:version.nupkg to Nuget.org"
+       dotnet nuget push "./packages/Seekatar.Tools.$env:version.nupkg" --api-key ${{ secrets.NUGET_ORG_PAT }} --source "https://api.nuget.org/v3/index.json"
       env:
        Version: ${{ env.Version }}
