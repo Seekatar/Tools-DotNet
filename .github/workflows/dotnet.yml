@@ -55,6 +55,9 @@ jobs:
         }
         "version=$version written to $env:GITHUB_ENV"
         "version=$version" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+      env:
+        branch: ${{ github.ref }}
+        runNumber: ${{ github.run_number }}
 
     - name: Dump Environment
       run: |
