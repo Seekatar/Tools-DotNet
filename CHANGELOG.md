@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.2.2] 2024-12-03
+
+### Changed
+
+- Updated vulnerable dependencies
+
 ## [0.2.1] 2024-9-13
 
 ### Changed

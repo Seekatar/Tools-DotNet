@@ -18,7 +18,8 @@ param (
      })]
     [string[]] $Tasks,
     [string] $Version,
-    [string] $LocalNugetFolder
+    [string] $LocalNugetFolder,
+    [string] $NugetVersion
 )
 
 function executeSB
@@ -109,6 +110,17 @@ foreach ($t in $myTasks) {
                     }
                 } else {
                     throw "Must supply Version for pack"
+                }
+            }
+            'RunMinimal' {
+                if ($NugetVersion) {
+                    $env:NUGET_VERSION = $NugetVersion
+                }
+                executeSB -WorkingDirectory (Join-Path $PSScriptRoot 'tests\WebSettingsMinimalApi') -Name 'RunMinimal' {
+                    dotnet run
+                }
+                if ($NugetVersion) {
+                    $env:NUGET_VERSION = $null
                 }
             }
             default {
