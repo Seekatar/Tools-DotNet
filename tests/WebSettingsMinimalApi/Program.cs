@@ -2,7 +2,8 @@ using Seekatar.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"));
+builder.Configuration.InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"),
+suppressWarnings:bool.Parse(System.Environment.GetEnvironmentVariable("SUPPRESS_WARNINGS") ?? "false"));
 
 // Add services to the container.
 
@@ -20,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
