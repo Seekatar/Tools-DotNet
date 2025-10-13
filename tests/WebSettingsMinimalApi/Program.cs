@@ -2,7 +2,8 @@ using Seekatar.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"));
+builder.Configuration.InsertSharedDevSettings(reloadOnChange: false, System.Environment.GetEnvironmentVariable("CONFIG_FILE"),
+suppressWarnings:bool.Parse(System.Environment.GetEnvironmentVariable("SUPPRESS_WARNINGS") ?? "false"));
 
 // Add services to the container.
 
@@ -20,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -33,6 +34,18 @@ app.MapGet("/config", (IConfiguration configuration) =>
     return configuration.AsEnumerable().Where( o => o.Key.StartsWith("In")).OrderBy(o => o.Key).ToDictionary(x => x.Key, x => x.Value);
 })
 .WithName("GetConfig");
+
+app.MapGet("/", () => {
+    return Results.Content("""
+                            <html>
+                            <a href="/config">/config</a><br/>
+                            Or use /config/{value} to get a specific value
+                            <br/>
+                            Or see the test.http file
+                            </html>
+                            """, "text/html");
+}).WithName("Root");
+
 
 app.MapControllers();
 

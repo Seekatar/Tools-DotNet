@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using WebSettingsApi;
 using Seekatar.Tools;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Seekatar.Tests;
 
@@ -28,17 +29,28 @@ public class SharedDevSettingsWebTest
     [Test]
     public async Task TestNoConfigFile()
     {
-        await RunTest(configFile: "ZZZ", expectedValue: "");
+        await RunTest(configFile: "ZZZ1", expectedValue: "", stdOutput: "In development environment and InsertSharedDevSettings called, but couldn't find");
+    }
+
+    [Test]
+    public async Task TestNoConfigFileSuppressWarning()
+    {
+        await RunTest(configFile: "ZZZ2", expectedValue: "", suppressWarnings: true, stdOutput: "");
     }
 
     [Test]
     public async Task TestTurnedOff()
     {
-        await RunTest(environment: "ZZZ", configFile: "", expectedValue: "");
+        await RunTest(environment: "ZZZ3", configFile: "", expectedValue: "");
     }
 
-    async static Task RunTest(string environment = "Development", string configFile = "", string expectedValue = "DEV")
+    async static Task RunTest(string environment = "Development", string configFile = "", string expectedValue = "DEV", bool suppressWarnings = false, string stdOutput = "")
     {
+        // override stdout to catch the warning
+        var originalOut = System.Console.Out;
+        using var consoleOutput = new StringWriter();
+        System.Console.SetOut(consoleOutput);
+
         System.Environment.SetEnvironmentVariable("InEnvironment", "ENV");
         System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         System.Environment.SetEnvironmentVariable("NETCORE_ENVIRONMENT", environment);
@@ -50,7 +62,7 @@ public class SharedDevSettingsWebTest
                 new WebHostBuilder()
                     .ConfigureAppConfiguration(configurationBuilder =>
                     {
-                        configurationBuilder.InsertSharedDevSettings(reloadOnChange: false, configFile)
+                        configurationBuilder.InsertSharedDevSettings(reloadOnChange: false, configFile, suppressWarnings)
                                             .AddJsonFile("appsettings.json")
                                             .AddEnvironmentVariables();
 
@@ -61,6 +73,15 @@ public class SharedDevSettingsWebTest
         await GetEnvValue(testClient, "InAppSettings", "APP");
         await GetEnvValue(testClient, "InEnvironment", "ENV");
         await GetEnvValue(testClient, "InDevSettings", expectedValue);
+
+        var output = consoleOutput.ToString();
+
+        if (!string.IsNullOrWhiteSpace(stdOutput))
+            output.ShouldStartWith(stdOutput);
+        else
+            output.ShouldBeEmpty();
+        // restore stdout
+        System.Console.SetOut(originalOut);
 
         testClient?.Dispose();
         testServer?.Dispose();

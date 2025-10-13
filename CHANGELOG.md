@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.2.3] 2025-10-13
+
+### Added
+
+- suppressWarnings parameter to InsertSharedDevSettings to suppress warning messages when the config file is not found
+
+### Changed
+
+- Updated the build to use the new NuGet Trusted Publishing feature (see the [MS Blog](https://devblogs.microsoft.com/dotnet/enhanced-security-is-here-with-the-new-trust-publishing-on-nuget-org/))
+
 ## [0.2.2] 2024-12-03
 
 ### Changed

@@ -17,7 +17,10 @@ namespace Seekatar.Tools
         const string SharedDevSettingsName = "shared.appsettings.Development.json";
         const string SharedDevSettingsConfigName = "sharedDevSettingsPath";
 
-        private static string GetPath(string fileName, IConfiguration? config = null, [System.Runtime.CompilerServices.CallerMemberName] string caller = "")
+        private static string GetPath(string fileName,
+                                bool suppressWarnings = false,
+                                IConfiguration? config = null,
+                                [System.Runtime.CompilerServices.CallerMemberName] string caller = "")
         {
             if (config != null && config[SharedDevSettingsConfigName] != null)
             {
@@ -37,8 +40,11 @@ namespace Seekatar.Tools
                     dir = Path.GetDirectoryName(dir);
                 }
 
-                Console.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
-                Debug.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
+                if (!suppressWarnings)
+                {
+                    Console.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
+                    Debug.WriteLine($"In development environment and {caller} called, but couldn't find '{fileName}'");
+                }
 
                 return "";
             }
@@ -48,10 +54,11 @@ namespace Seekatar.Tools
         /// Get the path of a shared settings file by looking up until it finds it
         /// </summary>
         /// <param name="fileName">Name of file to find</param>
+        /// <param name="suppressWarnings">suppress warnings if not found</param>
         /// <returns>fully qualified name or null</returns>
-        public static string GetSharedSettingsPath(string fileName = SharedDevSettingsName)
+        public static string GetSharedSettingsPath(string fileName = SharedDevSettingsName, bool suppressWarnings = false)
         {
-            return GetPath(fileName);
+            return GetPath(fileName, suppressWarnings);
         }
 
         /// <summary>
@@ -60,6 +67,7 @@ namespace Seekatar.Tools
         /// <param name="builder">ConfigurationBuilder</param>
         /// <param name="reloadOnChange">switch to set for reload on change</param>
         /// <param name="fileName">override default name of shared_appsettings.Development.json</param>
+        /// <param name="suppressWarnings">suppress warnings if not found</param>
         /// <example>
         /// <code>
         /// var configuration = new ConfigurationBuilder()
@@ -72,7 +80,8 @@ namespace Seekatar.Tools
         /// <returns>builder</returns>
         public static IConfigurationBuilder AddSharedDevSettings(this IConfigurationBuilder builder,
                                                                  bool reloadOnChange = false,
-                                                                 string? fileName = null)
+                                                                 string? fileName = null,
+                                                                 bool suppressWarnings = false)
         {
             if (String.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
                 String.Equals(Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase) ||
@@ -80,7 +89,7 @@ namespace Seekatar.Tools
             {
                 if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
 
-                var path = GetPath(fileName);
+                var path = GetPath(fileName, suppressWarnings);
                 if (!string.IsNullOrWhiteSpace(path))
                 {
                     builder.AddJsonFile(path, optional: false, reloadOnChange);
@@ -126,7 +135,10 @@ namespace Seekatar.Tools
         /// </code>
         /// </example>
         /// <returns>builder</returns>
-        public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder, bool reloadOnChange = false, string? fileName = null)
+        public static IConfigurationBuilder InsertSharedDevSettings(this IConfigurationBuilder builder,
+                                                                    bool reloadOnChange = false,
+                                                                    string? fileName = null,
+                                                                    bool suppressWarnings = false)
         {
             if (string.IsNullOrWhiteSpace(fileName)) { fileName = SharedDevSettingsName; }
 
@@ -140,7 +152,7 @@ namespace Seekatar.Tools
                 // very roughly based on https://jumpforjoysoftware.com/2018/09/aspnet-core-shared-settings/
                 // ResolveFileProvider was the trick
 
-                var path = GetPath(fileName, config);
+                var path = GetPath(fileName, suppressWarnings, config);
 
                 if (File.Exists(path))
                 {
