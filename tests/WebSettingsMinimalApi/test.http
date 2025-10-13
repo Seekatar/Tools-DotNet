@@ -1,0 +1,17 @@
+@baseUri=http://localhost:5120
+
+### WebSettingsMinimalApi tests
+GET {{baseUri}}/config
+
+### get one value
+GET {{baseUri}}/config/InAppSettings
+
+### get one value
+GET {{baseUri}}/config/InDevelopment
+
+### get one value
+GET {{baseUri}}/config/InDevSettings
+
+### get one value
+GET {{baseUri}}/config/InEnvironment
+

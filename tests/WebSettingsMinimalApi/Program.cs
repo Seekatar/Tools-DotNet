@@ -35,6 +35,18 @@ app.MapGet("/config", (IConfiguration configuration) =>
 })
 .WithName("GetConfig");
 
+app.MapGet("/", () => {
+    return Results.Content("""
+                            <html>
+                            <a href="/config">/config</a><br/>
+                            Or use /config/{value} to get a specific value
+                            <br/>
+                            Or see the test.http file
+                            </html>
+                            """, "text/html");
+}).WithName("Root");
+
+
 app.MapControllers();
 
 app.Run();
