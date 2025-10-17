@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.2.4] 2025-10-17
+
+No changes, just rebuild to pick up SDK fix for [CVE-2025-55315](https://github.com/advisories/GHSA-5rrx-jjjq-q2r5#affected-software)
+
 ## [0.2.3] 2025-10-13
 
 ### Added
